@@ -94,14 +94,14 @@ class Coach:
 				self.optimizer.step()
 
 				# Logging related
-				if self.global_step % self.opts.image_interval == 0 or (self.global_step < 1000 and self.global_step % 25 == 0):
+				if self.global_step % self.opts.image_interval == 0 or (self.global_step < 1000 and self.global_step % 50 == 0):
 					self.parse_and_log_images(id_logs, x, y, y_hat, title='images/train/faces')
 				if self.global_step % self.opts.board_interval == 0:
 					self.print_metrics(loss_dict, prefix='train')
 					self.log_metrics(loss_dict, prefix='train')
 
-				# Log images of first batch to wandb
-				if self.opts.use_wandb and batch_idx == 0:
+				# Log images of first batch and save image interval to wandb
+				if self.opts.use_wandb and (batch_idx == 0 or (self.global_step % self.opts.image_interval == 0)):
 					self.wb_logger.log_images_to_wandb(x, y, y_hat, id_logs, prefix="train", step=self.global_step, opts=self.opts)
 
 				# Validation related
